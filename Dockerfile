@@ -1,7 +1,8 @@
 FROM maven:3.9.11-eclipse-temurin-25-noble AS build
 RUN apt-get update && apt-get install git -y
 WORKDIR /java
-RUN git clone https://github.com/spring-projects/spring-petclinic.git && \
+ARG url = https://github.com/spring-projects/spring-petclinic.git
+RUN git clone $url && \
      cd spring-petclinic && \
      mvn package
 
