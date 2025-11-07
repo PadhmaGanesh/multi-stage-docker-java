@@ -1,10 +1,17 @@
-FROM maven:3.9.9-eclipse-temurin-25 as build
+# ---------- Build Stage ----------
+FROM maven:3.9.9-eclipse-temurin-25 AS build
+
 RUN git clone https://github.com/PadhmaGanesh/spring-petclinic.git && \
     cd spring-petclinic && \
-    mvn package
+    mvn clean package -DskipTests
 
-FROM eclipse-temurin:25-jre as running
-WORKDIR /ganesh
-COPY --from=build /spring-petclinic/target/*.jar ganesh.jar
+# ---------- Runtime Stage ----------
+FROM eclipse-temurin:25-jre
+
+WORKDIR /app
+
+COPY --from=build /spring-petclinic/target/*.jar app.jar
+
 EXPOSE 8080
-CMD ["java","-jar","ganesh.jar"]
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
