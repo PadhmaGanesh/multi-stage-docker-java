@@ -7,7 +7,7 @@ RUN git clone https://github.com/PadhmaGanesh/spring-petclinic.git && \
 FROM eclipse-temurin:25-jre AS running
 ARG user_name=ganesh
 ARG DIR=/usr/share/demo
-RUN adduser -m -d ${DIR} -s /bin/bash ${user_name} 
+RUN adduser --home ${DIR} --shell /bin/bash --disabled-password --gecos "" ${user_name} 
 WORKDIR ${DIR}
 USER ${user_name}
 COPY --from=build /spring-petclinic/target/*.jar ganesh.jar
