@@ -1,9 +1,9 @@
-FROM maven:3.9.11-eclipse-temurin-25-noble as build
+FROM eclipse-temurin:25-jre-jammy AS build
 RUN git clone https://github.com/PadhmaGanesh/spring-petclinic.git && \
     cd spring-petclinic && \
     mvn package
 
-FROM eclipse-temurin:25-jre as running
+FROM eclipse-temurin:25-jre AS running
 ARG user_name=ganesh
 ARG DIR=/usr/share/demo
 RUN adduser -m -d ${DIR} -s /bin/bash ${user_name} 
