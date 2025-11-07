@@ -1,17 +1,14 @@
-# ---------- Build Stage ----------
-FROM maven:3.9.9-eclipse-temurin-25 AS build
-
+FROM maven:3.9.11-eclipse-temurin-25-noble as build
 RUN git clone https://github.com/PadhmaGanesh/spring-petclinic.git && \
     cd spring-petclinic && \
-    mvn clean package -DskipTests
+    mvn package
 
-# ---------- Runtime Stage ----------
-FROM eclipse-temurin:25-jre
-
-WORKDIR /app
-
-COPY --from=build /spring-petclinic/target/*.jar app.jar
-
+FROM eclipse-temurin:25-jre as running
+ARG ${user_name}=ganesh
+ARG ${DIR}=/usr/share/demo
+RUN adduser -m -d ${DIR} -s /bin/bash ${user_name} 
+WORKDIR ${DIR}
+USER ${user_name}
+COPY --from=build /spring-petclinic/target/*.jar ganesh.jar
 EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java","-jar","ganesh.jar"]
